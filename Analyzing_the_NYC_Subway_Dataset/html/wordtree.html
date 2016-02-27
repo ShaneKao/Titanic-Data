@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {packages:['wordtree']});
+      google.charts.setOnLoadCallback(drawSimpleNodeChart);
+      function drawSimpleNodeChart() {
+        var nodeListData = new google.visualization.arrayToDataTable([
+          ['id', 'childLabel', 'parent', 'size', { role: 'style' }],
+          [0, 'Root', -1, 1, 'black'],
+          [1, 'Sex=female', 0, 1, 'black'],
+          [2, 'Sex=male', 0, 1, 'black'],
+		  [3, 'Pclass=1or2', 1, 1, 'black'],
+		  [4, 'Pclass=3', 1, 1, 'black'],
+		  [5, '159 Survived', 3, 1, 'green'],
+		  [6, '9 not Survived', 3, 1, 'black'],
+		  [7, '72 Survived', 4, 1, 'black'],
+		  [8, '72 not Survived', 4, 1, 'black'],
+		  [9, 'Salutation=Master.', 2, 1, 'black'],
+		  [10, 'Other', 2, 1, 'black'],
+		  [11, '86 Survived', 10, 1, 'black'],
+		  [12, '451 not Survived', 10, 1, 'red'],	
+		  [13, 'SibSp=0or1or2', 9, 1, 'black'],
+		  [14, 'Other', 9, 1, 'black'],		  
+		  [15, '22 Survived', 13, 1, 'green'],
+		  [16, '0 not Survived', 13, 1, 'black'],
+		  [17, '1 Survived', 14, 1, 'black'],
+		  [18, '17 not Survived', 14, 1, 'red'],		  
+     ]);
+
+        var options = {
+          colors: ['black', 'black', 'black'],
+          wordtree: {
+            format: 'explicit',
+            type: 'suffix'
+          }
+        };
+
+        var wordtree = new google.visualization.WordTree(document.getElementById('wordtree_explicit'));
+        wordtree.draw(nodeListData, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="wordtree_explicit" style="width: 1900px; height: 500px;"></div>
+  </body>
+</html>
