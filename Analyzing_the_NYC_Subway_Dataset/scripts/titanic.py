@@ -10,12 +10,12 @@ class titanic_analysis(object):
         self.titanic_data = pd.read_csv(self.titanic_data_file, header = False)
         self.titanic_data_cleaned = self.data_wrangling()              
     def data_wrangling(self):
-        df = self.titanic_data.drop('Cabin', 1)[~self.titanic_data.Embarked.isnull()]
-        df['Salutation'] = df.apply(lambda x: self.get_salutation(x['Name']), axis=1)
-        med = df.groupby('Salutation')['Age'].transform('median')
-        df['Age'] = df['Age'].fillna(med)
+        df = self.titanic_data.drop('Cabin', 1)[~self.titanic_data.Embarked.isnull()] #Delete Cabin & Delete missing values of Embarked
+        df['Salutation'] = df.apply(lambda x: self.get_salutation(x['Name']), axis=1) 
+        med = df.groupby('Salutation')['Age'].transform('median') #median age for each Salutation
+        df['Age'] = df['Age'].fillna(med) #fill nan by median
         return df
-    def get_salutation(self, name):
+    def get_salutation(self, name): #get salutation by regular expression
         m = re.search(r'Miss\.|Mr\.|Mrs\.|Master\.|Rev\.', name)
         if m:
             salutation = m.group()
@@ -23,8 +23,8 @@ class titanic_analysis(object):
             salutation = 'other'
         return salutation
     def draw_pie_chart(self, gpby_col, filter_value):
-        df = self.titanic_data.groupby([gpby_col, 'Survived'])[['Survived']].count()
-        slices = df.iloc[df.index.get_level_values(gpby_col) == filter_value].Survived.tolist()
+        df = self.titanic_data.groupby([gpby_col, 'Survived'])[['Survived']].count() 
+        slices = df.iloc[df.index.get_level_values(gpby_col) == filter_value].Survived.tolist() # get subset for interested case
         activities = [0, 1]
         cols = ['r', 'g']
         plt.pie(slices, labels = activities, colors = cols, shadow = True, autopct = "%1.1f%%")
@@ -32,7 +32,7 @@ class titanic_analysis(object):
         plt.legend(('Not Survived','Survived'))
         plt.show()
         
-    def get_treemap(self, x, y):
+    def get_treemap(self, x, y): # get reday the data for google charts
         df_count = self.titanic_data.groupby([x, y])[[y]].count()
         df_survival_rate = self.titanic_data.groupby([x, y, 'Survived'])[['Survived']].count()
         result = [['Location', 'Parent', 'Numbers of Passenger(size)', 'Survival Rate(color)'], [x + '&' + y, None, 0, 0]]
